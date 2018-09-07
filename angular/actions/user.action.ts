@@ -152,25 +152,24 @@ export class UserActions {
       type: UserActionType.SET_CURRENT_USER,
       payload: null
     });
+
     ['sheet', 'streaming'].forEach(type => {
       this.store.dispatch({
         type: PostActionType.RESET_POSTS_RESULT,
-        payload: PostActionType.PurchasedPosts(type)
+        payload: { boardType: PostActionType.PurchasedPosts(type) }
       });
       this.store.dispatch({
         type: PostActionType.RESET_POSTS_RESULT,
-        payload: PostActionType.MyPosts(type)
+        payload: { boardType: PostActionType.MyPosts(type) }
       });
     });
     // 게시글 좋아요 목록 리셋
     this.store.dispatch({
-      type: UserActionType.SET_BOARD_LIKES,
-      likes: { free: [], video: [], music: [] }
+      type: UserActionType.SET_BOARD_LIKES
     });
     // 댓글 좋아요 목록 리셋
     this.store.dispatch({
-      type: UserActionType.SET_COMMENT_LIKES,
-      likes: { free: [], video: [], music: [] }
+      type: UserActionType.SET_COMMENT_LIKES
     });
   }
 

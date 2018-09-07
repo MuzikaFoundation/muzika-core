@@ -69,13 +69,13 @@ const initialState: PostState = {
   }
 };
 
-export interface PostLikeAction extends PayloadAction {
+export interface PostLikeAction extends Action {
   boardType: string;
   boardID: string;
   diff: number;
 }
 
-export interface SavePostAction extends PayloadAction {
+export interface SavePostAction extends Action {
   boardType: string;
   boardID: string;
   posts: BasePost[];
@@ -173,8 +173,9 @@ function postsActionState(state,
   });
 }
 
-export const PostReducer = function(state: PostState = initialState, action: PayloadAction): PostState {
-  switch (action.type) {
+export const PostReducer = function(state: PostState = initialState, _action: Action): PostState {
+  const action: PayloadAction = <PayloadAction>_action;
+  switch (_action.type) {
     case PostActionType.RESET_POSTS_RESULT:
       return tassign(state, {
         postResult: tassign(state.postResult, {
@@ -224,7 +225,7 @@ export const PostReducer = function(state: PostState = initialState, action: Pay
       return postsActionState(state, action.payload, 'after');
 
     case PostActionType.SAVE_POSTS:
-      const savePostAction = (<SavePostAction> action);
+      const savePostAction = (<SavePostAction> _action);
 
       syncPostToState(state.post, savePostAction.boardType, savePostAction.posts, savePostAction.update_column);
 
@@ -235,7 +236,7 @@ export const PostReducer = function(state: PostState = initialState, action: Pay
       });
 
     case PostActionType.LIKE_TOGGLE_POST:
-      const likePostAction = (<PostLikeAction> action);
+      const likePostAction = (<PostLikeAction> _action);
 
       if (state.post[likePostAction.boardType][likePostAction.boardID]) {
         state.post[likePostAction.boardType][likePostAction.boardID].likes += likePostAction.diff;

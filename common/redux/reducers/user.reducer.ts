@@ -38,15 +38,15 @@ export function UserReducer(state: UserState = initialState, action: PayloadActi
 
     case UserActionType.SET_BOARD_LIKES:
     case UserActionType.SET_COMMENT_LIKES:
-      const boardType = action.payload.boardType;
+      const boardType = (action.payload) ? action.payload.boardType : null;
 
       if (action.type === UserActionType.SET_COMMENT_LIKES) {
         return tassign(state, {
-          commentLikes: tassign(state.commentLikes, {[boardType]: action.payload.likes})
+          commentLikes: tassign(state.commentLikes, (boardType) ? {[boardType]: action.payload.likes} : {})
         });
       } else {
         return tassign(state, {
-          boardLikes: tassign(state.boardLikes, {[boardType]: action.payload.likes})
+          boardLikes: tassign(state.boardLikes, (boardType) ? {[boardType]: action.payload.likes} : {})
         });
       }
 

@@ -26,9 +26,7 @@
     ]
   },
   "files": [
-    "./public_api.ts",
-    "./nodejs/public_api.ts",
-    "./electron/public_api.ts"
+    "./public_api.ts"
   ],
   "exclude": [
     "dist",
