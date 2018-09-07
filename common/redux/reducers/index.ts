@@ -15,7 +15,7 @@ export interface IAppState {
   user: UserState;
 }
 
-export const RootReducer = {
+export const RootReducer: any = {
   app: AppReducer,
   post: PostReducer,
   comment: CommentReducer,
