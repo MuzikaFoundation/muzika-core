@@ -29,4 +29,18 @@ export class AppActions {
       payload: { serviceName, status }
     });
   }
+
+  setProtocol(protocol: 'eth' | 'ont') {
+    this.store.dispatch({
+      type: AppActionType.SET_PROTOCOL,
+      payload: { protocol }
+    });
+  }
+
+  setNetwork(network: 'MainNet' | 'TestNet') {
+    this.store.dispatch({
+      type: AppActionType.SET_NETWORK,
+      payload: { network }
+    });
+  }
 }
