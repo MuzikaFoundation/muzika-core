@@ -14,14 +14,14 @@ export interface AppState {
     [serviceName: string]: boolean
   };
   protocol: 'eth' | 'ont';
-  network: 'MainNet' | 'TestNet';
+  network: 'mainNet' | 'testNet';
 }
 
 export const appInitialState: AppState = {
   updatable: undefined,
   serviceStatus: {},
   protocol: 'eth',
-  network: 'TestNet'
+  network: 'testNet'
 };
 
 export function AppReducer(state: AppState = appInitialState, action: PayloadAction): AppState {
@@ -40,7 +40,8 @@ export function AppReducer(state: AppState = appInitialState, action: PayloadAct
 
     case AppActionType.SET_PROTOCOL:
       return tassign(state, {
-        protocol: action.payload.protocol
+        protocol: action.payload.protocol,
+        network: action.payload.network || state.network
       });
 
     case AppActionType.SET_NETWORK:
