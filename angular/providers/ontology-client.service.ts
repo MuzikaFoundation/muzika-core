@@ -15,7 +15,8 @@ export class OntologyClient extends RpcClient {
   }
 
   set network(networkType: 'mainNet' | 'testNet') {
-    this.url = this.environment.protocol.ont[networkType].rpcUrl;
+    const protocolInfo = this.environment.protocol.ont[networkType];
+    this.url = `${protocolInfo.rpcUrl}:${protocolInfo.port}`;
     this._network = networkType;
   }
 
