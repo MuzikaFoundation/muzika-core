@@ -1,17 +1,19 @@
 import BigNumber from 'bignumber.js';
 
+export type AccountBalanceType = string | BigNumber | number;
+
 export interface AccountBalance {
   // for ethereum protocol
-  eth?: string | BigNumber | number;
-  ont?: string | BigNumber | number;
+  eth?: AccountBalanceType;
 
   // for ontology protocol
-  ong?: string | BigNumber | number;
+  ont?: AccountBalanceType;
+  ong?: AccountBalanceType;
 
   // for muzika
-  mzk?: string | BigNumber | number;
-  loyalty?: string | BigNumber | number;
+  mzk?: AccountBalanceType;
+  loyalty?: AccountBalanceType;
 
   // for etc or future
-  [balanceType: string]: string | BigNumber | number;
+  [balanceType: string]: AccountBalanceType;
 }
