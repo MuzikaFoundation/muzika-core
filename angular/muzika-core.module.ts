@@ -17,6 +17,7 @@ import { JWTInterceptor } from './config/jwt-interceptor';
 import { ContractProviders } from './contracts/index';
 import { FileBaseNamePipe, ObjectIteratorPipe } from './pipes';
 import { StoreModule } from '@ngrx/store';
+import { EnvironmentTypeV2 } from '../../studio-main/src/env_types';
 
 @NgModule({
   imports: [
@@ -76,10 +77,10 @@ import { StoreModule } from '@ngrx/store';
     },
     {
       provide: BASE_API_URL,
-      useFactory: (environment: EnvironmentType) => {
+      useFactory: (environment: EnvironmentTypeV2) => {
         return environment.base_api_url;
       },
-      deps: [[EnvironmentToken]]
+      deps: [[EnvironmentV2Token]]
     }
   ]
 })

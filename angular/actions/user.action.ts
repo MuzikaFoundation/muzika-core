@@ -6,7 +6,7 @@ import {
   MuzikaPlatformType,
   PaginationResult,
   PostActionType,
-  promisify,
+  promisify, ProtocolType,
   User,
   UserActionType
 } from '@muzika/core';
@@ -17,6 +17,7 @@ import { PLATFORM_TYPE_TOKEN } from '../config/injection.tokens';
 import { ExtendedWeb3 } from '../providers/extended-web3.provider';
 import { LocalStorage } from '../providers/local-storage.service';
 import { select, Store } from '@ngrx/store';
+import { OntologyClient } from '../providers';
 
 @Injectable({ providedIn: 'root' })
 export class UserActions {
@@ -33,6 +34,7 @@ export class UserActions {
   constructor(private store: Store<IAppState>,
               private apiConfig: APIConfig,
               private web3: ExtendedWeb3,
+              private ontClient: OntologyClient,
               private localStorage: LocalStorage,
               @Inject(PLATFORM_TYPE_TOKEN) private platformType: MuzikaPlatformType) {
     UserActions.currentUserObs = this.store.pipe<User>(select(state => state.user.currentUser));
@@ -121,19 +123,31 @@ export class UserActions {
       .pipe(concatMap(response => this.refreshMe()));
   }
 
-  login(address: string): Observable<User> {
+  /**
+   * Sign in to the server.
+   *
+   * @param protocol blockchain protocol for signing.
+   * @param address address for sign in. (Only for ethereum, if ontology,
+   *        the provider determine its address, so it will be ignored)
+   */
+  login(protocol: ProtocolType, address: string): Observable<User> {
     const messagePrefix = `Login to Muzika!\nSignature: `;
-    return this.apiConfig.get(`/user/${address}/sign-message`).pipe(
+    return this.apiConfig.get(`/user/${protocol}/${address}/sign-message`).pipe(
       concatMap((message) => {
-        return from(promisify(
-          this.web3.personal.sign,
-          this.web3.toHex(messagePrefix + message),
-          address
-        ));
+        switch (protocol) {
+          case 'eth':
+            return from(promisify(
+              this.web3.personal.sign,
+              this.web3.toHex(messagePrefix + message),
+              address
+            ));
+          case 'ont':
+            return this.ontClient.api.message.signMessage({ message: messagePrefix + message });
+        }
       }),
       concatMap((signature) => {
         return this.apiConfig
-          .post<string>(`/login`, { address, signature, platform_type: this.platformType })
+          .post<string>(`/login`, { address, signature, protocol, platform_type: this.platformType })
           .pipe(
             tap(token => {
               if (token) {

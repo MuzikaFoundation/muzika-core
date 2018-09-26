@@ -1,11 +1,13 @@
 import { tassign } from 'tassign';
-import { PayloadAction } from '../../models';
+import { EthereumWalletItem, NetworkType, OntologyWalletItem, PayloadAction, ProtocolType } from '../../models';
 
 export class AppActionType {
   static SET_SERVICE_STATUS = '/application/set-service-status';
   static SET_UPDATABLE = '/application/set-updatable';
   static SET_PROTOCOL = '/application/set-protocol';
   static SET_NETWORK = '/application/set-network';
+  static SET_CURRENT_WALLET = '/application/set-current-wallet';
+  static SET_WALLET_PASSWORD = '/application/set-password';
 }
 
 export interface AppState {
@@ -13,15 +15,19 @@ export interface AppState {
   serviceStatus: {
     [serviceName: string]: boolean
   };
-  protocol: 'eth' | 'ont';
-  network: 'mainNet' | 'testNet';
+  protocol: ProtocolType;
+  network: NetworkType;
+  currentWallet: EthereumWalletItem | OntologyWalletItem | null;
+  currentWalletPassword: string;
 }
 
 export const appInitialState: AppState = {
   updatable: undefined,
   serviceStatus: {},
   protocol: 'eth',
-  network: 'testNet'
+  network: 'testNet',
+  currentWallet: null,
+  currentWalletPassword: ''
 };
 
 export function AppReducer(state: AppState = appInitialState, action: PayloadAction): AppState {
@@ -47,6 +53,16 @@ export function AppReducer(state: AppState = appInitialState, action: PayloadAct
     case AppActionType.SET_NETWORK:
       return tassign(state, {
         network: action.payload.network
+      });
+
+    case AppActionType.SET_CURRENT_WALLET:
+      return tassign(state, {
+        currentWallet: action.payload.wallet
+      });
+
+    case AppActionType.SET_WALLET_PASSWORD:
+      return tassign(state, {
+        currentWalletPassword: action.payload.password
       });
 
     default:

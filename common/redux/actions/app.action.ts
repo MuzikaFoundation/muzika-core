@@ -1,5 +1,6 @@
 import { Store } from 'redux';
 import { AppActionType } from '../reducers/app.reducer';
+import { EthereumWalletItem, NetworkType, OntologyWalletItem, ProtocolType } from '../../models/blockchain';
 
 export class AppActions {
   constructor(private store: Store) {
@@ -30,17 +31,24 @@ export class AppActions {
     });
   }
 
-  setProtocol(protocol: 'eth' | 'ont') {
+  setProtocol(protocol: ProtocolType) {
     this.store.dispatch({
       type: AppActionType.SET_PROTOCOL,
       payload: { protocol }
     });
   }
 
-  setNetwork(network: 'MainNet' | 'TestNet') {
+  setNetwork(network: NetworkType) {
     this.store.dispatch({
       type: AppActionType.SET_NETWORK,
       payload: { network }
+    });
+  }
+
+  setCurrentWallet(wallet: EthereumWalletItem | OntologyWalletItem, password: string) {
+    this.store.dispatch({
+      type: AppActionType.SET_CURRENT_WALLET,
+      payload: { wallet, password }
     });
   }
 }

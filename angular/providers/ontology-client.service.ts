@@ -1,26 +1,27 @@
-import { Inject, Injectable } from '@angular/core';
-import { RpcClient } from 'ontology-ts-sdk';
-import { EnvironmentV2Token } from '../config';
-import { EnvironmentTypeV2 } from '@muzika/core';
+import { Injectable } from '@angular/core';
+import { OntologyDappClient, OntologyDappProvider } from '@muzika/core';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 
 @Injectable({providedIn: 'root'})
-export class OntologyClient extends RpcClient {
-  private _network: 'mainNet' | 'testNet';
+export class OntologyClient extends OntologyDappClient {
+  private _providerChange: BehaviorSubject<OntologyDappProvider> = new BehaviorSubject<OntologyDappProvider>(null);
+  private currentProvider: OntologyDappProvider;
 
-  constructor(
-    @Inject(EnvironmentV2Token) private environment: EnvironmentTypeV2
-  ) {
-    super(null);
+  constructor() {
+    super();
   }
 
-  set network(networkType: 'mainNet' | 'testNet') {
-    const protocolInfo = this.environment.protocol.ont[networkType];
-    this.url = `${protocolInfo.rpcUrl}:${protocolInfo.port}`;
-    this._network = networkType;
+  async sendAsync(method: string, argument?: any): Promise<any> {
+    return await this.currentProvider.sendAsync(method, argument);
   }
 
-  get network(): 'mainNet' | 'testNet' {
-    return this._network;
+  setProvider(provider: OntologyDappProvider) {
+    this.currentProvider = provider;
+    this._providerChange.next(this.currentProvider);
+  }
+
+  public onProviderChange(): Observable<OntologyDappProvider> {
+    return this._providerChange.asObservable();
   }
 }
