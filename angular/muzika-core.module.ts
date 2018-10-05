@@ -9,7 +9,7 @@ import {
   environmentProdV2,
   environmentStage,
   environmentStageV2,
-  EnvironmentType
+  EnvironmentType, EnvironmentTypeV2
 } from '@muzika/core';
 import { PaginationComponent } from './components/pagination/pagination.component';
 import { BASE_API_URL, EnvironmentToken, EnvironmentTypeToken, EnvironmentV2Token } from './config/injection.tokens';
@@ -17,7 +17,6 @@ import { JWTInterceptor } from './config/jwt-interceptor';
 import { ContractProviders } from './contracts/index';
 import { FileBaseNamePipe, ObjectIteratorPipe } from './pipes';
 import { StoreModule } from '@ngrx/store';
-import { EnvironmentTypeV2 } from '../../studio-main/src/env_types';
 
 @NgModule({
   imports: [
