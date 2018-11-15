@@ -58,7 +58,7 @@ export class MuzikaWeb3Service {
         const reader = new FileReader();
 
         reader.onload = () => {
-          const input = reader.result;
+          const input: string = reader.result as any as string;
 
           try {
             this._providerHandle(new WalletProvider({input, password}, this.rpcUrl), observer);
